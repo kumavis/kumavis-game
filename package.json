@@ -1,0 +1,27 @@
+{
+  "name": "kumavis-game",
+  "version": "1.0.0",
+  "private": true,
+  "browserify": {
+    "transform": [
+      "glslify"
+    ]
+  },
+  "scripts": {
+    "start": "beefy index.js --open",
+    "pages": "browserify index.js -o bundle.js"
+  },
+  "dependencies": {
+    "beefy": "^2.1.1",
+    "browserify": "^6.2.0",
+    "bunny": "^1.0.1",
+    "game-shell-fps-cam": "^1.0.0",
+    "gl-geometry": "^1.3.0",
+    "gl-matrix": "^2.3.1",
+    "gl-mesh": "^0.1.0",
+    "gl-now": "^1.4.0",
+    "gl-shader": "^4.1.1",
+    "glslify": "^5.0.0",
+    "normals": "^1.0.1"
+  }
+}
