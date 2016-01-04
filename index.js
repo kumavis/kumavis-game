@@ -10,10 +10,12 @@ var glm = require('gl-matrix')
 var getBounds = require('bound-points')
 var bunny = require('bunny')
 var createCube = require('primitive-cube')
+var quad = require('primitive-quad')
 var intersectSphere = require('ray-sphere-intersection')
 var intersectAABB = require('ray-aabb-intersection')
 var wireframe = require('gl-wireframe')
 var mat4 = glm.mat4
+var quat = glm.quat
 var vec3 = glm.vec3
 
 var shell = Shell({
@@ -63,6 +65,8 @@ shell.on('gl-init', function() {
   )
 
   // create scene objects
+  scene.push(createFloor(gl))
+
   scene.push(createBunny(gl))
   scene.push(createBunny(gl))
   scene.push(createBunny(gl))
@@ -163,17 +167,41 @@ function createBunny(gl){
   var normals = getNormals.vertexNormals(bunny.cells, bunny.positions)
   geometry.attr('aNormal', normals)
   geometry.faces(bunny.cells)
-  var matrix      = mat4.create()
-  // position
+  var matrix = mat4.create()
+  // matrix
+  var matrix = mat4.create()
   var position = randomVec3([0,0,0],[100,0,100])
-  mat4.translate(matrix, matrix, position)
-  // scale
-  // mat4.scale(matrix, matrix, vec3.fromValues(0.1,0.1,0.1))
+  var rotation = quat.create()
+  // quat.rotateY(rotation, rotation, -0.5*Math.PI)
+  mat4.fromRotationTranslation(matrix, rotation, position)
+
   return {
     geometry: geometry,
     matrix: matrix,
     position: position,
     bounds: getBounds(bunny.positions),
+  }
+}
+
+function createFloor(gl){
+  var mesh = quad(100)
+  var geometry = Geometry(gl)
+  geometry.attr('aPosition', mesh.positions)
+  geometry.attr('aNormal', mesh.normals)
+  geometry.faces(mesh.cells)
+  // matrix
+  var matrix = mat4.create()
+  var position = vec3.fromValues(10, 0, 10)
+  var rotation = quat.create()
+  quat.rotateY(rotation, rotation, 0.5*Math.PI)
+  quat.rotateX(rotation, rotation, 0.5*Math.PI)
+  mat4.fromRotationTranslation(matrix, rotation, position)
+
+  return {
+    geometry: geometry,
+    matrix: matrix,
+    position: position,
+    bounds: getBounds(mesh.positions),
   }
 }
 

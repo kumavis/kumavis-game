@@ -27,6 +27,7 @@
     "glslify": "^5.0.0",
     "normals": "^1.0.1",
     "primitive-cube": "^1.0.2",
+    "primitive-quad": "^1.0.1",
     "ray-aabb-intersection": "^1.0.1",
     "ray-sphere-intersection": "^1.0.0"
   }
