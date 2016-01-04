@@ -14,6 +14,7 @@ var quad = require('primitive-quad')
 var intersectSphere = require('ray-sphere-intersection')
 var intersectAABB = require('ray-aabb-intersection')
 var wireframe = require('gl-wireframe')
+var voxelBlob = require('./voxel.js')
 var mat4 = glm.mat4
 var quat = glm.quat
 var vec3 = glm.vec3
@@ -25,6 +26,7 @@ var gl
 
 var shaders = {}
 var scene = []
+var voxels = []
 
 // camera
 var camera = attachCamera(shell)
@@ -80,6 +82,12 @@ shell.on('gl-init', function() {
   scene.push(createBunny(gl))
   scene.push(createBunny(gl))
 
+
+  voxels.push(createVoxelBlob(gl))
+  voxels.push(createVoxelBlob(gl))
+  voxels.push(createVoxelBlob(gl))
+  voxels.push(createVoxelBlob(gl))
+
 })
 
 shell.on('gl-render', function(t) {
@@ -96,6 +104,11 @@ shell.on('gl-render', function(t) {
     updateSelectionHelper(target)
     renderSelectionHelper(selectionHelper)
   }
+
+  // render voxels
+  voxels.forEach(function(obj){
+    voxelBlob.render(gl, projection, view, obj)
+  })
 
 })
 
@@ -183,6 +196,27 @@ function createBunny(gl){
   }
 }
 
+function createVoxelBlob(gl){
+  var blob = voxelBlob.create(gl)
+  var geometry = Geometry(gl)
+  // geometry.attr('aPosition', mesh.positions)
+  // geometry.attr('aNormal', mesh.normals)
+  // geometry.faces(mesh.cells)
+  // matrix
+  var matrix = mat4.create()
+  var position = randomVec3([0,0,0],[100,10,100])
+  var rotation = quat.create()
+  // quat.rotateX(rotation, rotation, 0.5*Math.PI)
+  mat4.fromRotationTranslation(matrix, rotation, position)
+
+  return {
+    blob: blob,
+    matrix: matrix,
+    position: position,
+    // bounds: getBounds(mesh.positions),
+  }
+}
+
 function createFloor(gl){
   var mesh = quad(100)
   var geometry = Geometry(gl)
@@ -193,7 +227,6 @@ function createFloor(gl){
   var matrix = mat4.create()
   var position = vec3.fromValues(10, 0, 10)
   var rotation = quat.create()
-  quat.rotateY(rotation, rotation, 0.5*Math.PI)
   quat.rotateX(rotation, rotation, 0.5*Math.PI)
   mat4.fromRotationTranslation(matrix, rotation, position)
 
