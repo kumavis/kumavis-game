@@ -1,5 +1,7 @@
 # bunny-walkthrough
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kumavis/kumavis-game.svg)](https://greenkeeper.io/)
+
 A "hello world" example of sorts for using [stack.gl](http://stack.gl/):
 simply draws a 3D bunny to the screen with an orbit camera for interacting
 with.
